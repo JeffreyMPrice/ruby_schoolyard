@@ -5,6 +5,14 @@ require "rspec/rails"
 require "factory_bot_rails"
 require "database_cleaner/active_record"
 
+# Keep the test database schema in sync with migrations automatically.
+# If you forget to migrate, RSpec will tell you rather than silently using a stale schema.
+begin
+  ActiveRecord::Migration.maintain_test_schema!
+rescue ActiveRecord::PendingMigrationError => e
+  abort e.to_s.strip
+end
+
 RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 

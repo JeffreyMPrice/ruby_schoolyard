@@ -63,6 +63,7 @@ bundle exec rspec
 
 # 5. If the assignment involves migrations, run them
 rails db:migrate
+# RSpec will automatically sync the test database — no need to migrate twice
 
 # 6. Run the specs again until they all pass
 bundle exec rspec

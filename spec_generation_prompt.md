@@ -64,7 +64,11 @@ users, reviews).
    - **config/application.rb** — stripped to active_model + active_record only
    - **config/environments/development.rb** — assets line removed
    - **spec/rails_helper.rb** — FactoryBot, DatabaseCleaner (:transaction strategy),
-     shoulda-matchers configured for active_record + active_model
+     shoulda-matchers configured for active_record + active_model. Must include
+     `ActiveRecord::Migration.maintain_test_schema!` (wrapped in begin/rescue) so the
+     test database schema stays in sync automatically when the learner runs
+     `rails db:migrate` — without this, specs fail with "Could not find table" even
+     after a successful migration.
    - **spec/spec_helper.rb** — minimal (verify_partial_doubles, chain clauses)
    - **app/models/** — skeleton model files (NO implementation of concept under test)
    - **spec/models/** (and/or spec/requests/ if appropriate) — failing specs
