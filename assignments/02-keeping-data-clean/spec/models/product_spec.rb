@@ -7,10 +7,8 @@ RSpec.describe Product, type: :model do
     context "presence" do
       it "is invalid without a name and uses a custom error message" do
         product = build(:product, name: nil)
-        aggregate_failures do
-          expect(product).not_to be_valid
-          expect(product.errors[:name]).to include("is required")
-        end
+        product.valid?
+        expect(product.errors[:name]).to include("is required")
       end
     end
 
@@ -26,10 +24,8 @@ RSpec.describe Product, type: :model do
     context "custom: description must differ from name" do
       it "is invalid when description matches the name and adds an error" do
         product = build(:product, name: "Running Shoes", description: "Running Shoes")
-        aggregate_failures do
-          expect(product).not_to be_valid
-          expect(product.errors[:description]).to include("must differ from the product name")
-        end
+        product.valid?
+        expect(product.errors[:description]).to include("must differ from the product name")
       end
     end
   end

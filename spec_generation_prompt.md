@@ -108,18 +108,29 @@ users, reviews).
      makes both pass at once, which confuses students doing TDD step by step. The rule
      is: one atomic unit of work (one validation, one method) must make exactly one
      spec go green. To follow this rule:
-     - For standard validators where you want to demonstrate the errors API, write a
-       single explicit multi-line spec that checks both `not_to be_valid` AND the
-       expected `errors` message — not two separate specs. When the message is
-       customisable (e.g. `presence:`), use a custom message so the spec pins the
-       exact string the learner must produce.
-     - For custom validators (`validate :method_name`), always write one combined spec
-       that checks both validity and the specific `errors.add` message together.
-     - Wrap combined `not_to be_valid` + `errors` assertions in `aggregate_failures`.
-       Without it, a failing validity check stops execution and the more diagnostic
-       errors message is never shown. With it, both messages appear on every failure.
-     - Shoulda-matchers one-liners are appropriate when there is no paired errors spec
-       and the matcher fully captures what needs to be tested (e.g. numericality chains).
+     - **Prefer the `valid?` + errors-only pattern** for specs that check both
+       validity and an error message. Call `model.valid?` explicitly, then assert
+       only on `model.errors[:field]`. This produces a single, always-diagnostic
+       assertion — the failure message names the field and the missing string
+       directly, with no noise about the object's validity state.
+       ```ruby
+       # preferred
+       product.valid?
+       expect(product.errors[:name]).to include("is required")
+       ```
+     - Only assert `not_to be_valid` (without an errors check) when the goal is
+       solely to verify that a validation fires and the message itself is not part
+       of the contract — e.g. standard validators whose default messages are well
+       known (`presence`, `uniqueness`).
+     - Use `aggregate_failures` only when two genuinely independent assertions are
+       both needed and neither can stand alone. Do not use it merely to work around
+       a combined test that could be simplified to a single assertion.
+     - For custom validators (`validate :method_name`), use the `valid?` + errors
+       pattern — it pins both the field and the exact `errors.add` message the
+       learner must produce without requiring a second assertion.
+     - Shoulda-matchers one-liners are appropriate when there is no paired errors
+       spec and the matcher fully captures what needs to be tested (e.g. numericality
+       chains).
 
 4. Factories:
    - Place in spec/factories/
