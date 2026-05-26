@@ -1,0 +1,28 @@
+{
+  "skill_name": "curriculum-student",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Test assignment 01 for me.",
+      "expected_output": "All 12 specs pass in 1-2 attempts. Report rates README as Clear, specs as Helpful, difficulty as About right for Phase 1. No out-of-scope concepts flagged. Asks about branch cleanup.",
+      "files": [],
+      "assertions": []
+    },
+    {
+      "id": 2,
+      "prompt": "Validate assignments/01-building-the-schema",
+      "expected_output": "All specs pass. README rated Needs work or Unclear due to missing getting-started steps and worked example. Skill still completes the assignment using specs alone. Asks about branch cleanup.",
+      "files": [],
+      "assertions": [],
+      "notes": "Before running: strip the Getting Started section and Worked Example from assignment 01 README.md"
+    },
+    {
+      "id": 3,
+      "prompt": "Run the student agent on assignment 01.",
+      "expected_output": "All specs pass (agent adds validation to make the extra spec green). Report flags the presence validation spec as requiring Phase 2 knowledge (validations) not yet taught at Phase 1. Concept scope section is populated with the out-of-scope finding.",
+      "files": [],
+      "assertions": [],
+      "notes": "Before running: add a validates_presence_of(:name) spec to product_spec.rb"
+    }
+  ]
+}
