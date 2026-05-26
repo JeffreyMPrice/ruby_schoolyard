@@ -103,6 +103,20 @@ users, reviews).
      verify the correct behaviour AFTER the fix
    - Include a spec/rails_helper.rb and spec/spec_helper.rb appropriate for Rails 7.2
    - Use DatabaseCleaner with the transaction strategy
+   - **Avoid paired specs.** Never write both a shoulda-matchers one-liner and a
+     separate explicit errors test for the same validation — adding that validation
+     makes both pass at once, which confuses students doing TDD step by step. The rule
+     is: one atomic unit of work (one validation, one method) must make exactly one
+     spec go green. To follow this rule:
+     - For standard validators where you want to demonstrate the errors API, write a
+       single explicit multi-line spec that checks both `not_to be_valid` AND the
+       expected `errors` message — not two separate specs. When the message is
+       customisable (e.g. `presence:`), use a custom message so the spec pins the
+       exact string the learner must produce.
+     - For custom validators (`validate :method_name`), always write one combined spec
+       that checks both validity and the specific `errors.add` message together.
+     - Shoulda-matchers one-liners are appropriate when there is no paired errors spec
+       and the matcher fully captures what needs to be tested (e.g. numericality chains).
 
 4. Factories:
    - Place in spec/factories/

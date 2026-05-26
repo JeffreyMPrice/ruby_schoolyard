@@ -132,6 +132,13 @@ counts as a failed attempt.
 
 Stop after 3 attempts regardless of outcome.
 
+**Paired-spec check (during your first successful attempt):** After reaching all
+green, go back and implement the solution one atomic unit at a time — one
+validation, one method, one scope — running the specs after each. Record how many
+specs go green per step. If any single unit of work makes more than one spec pass,
+that is a paired-spec problem: flag it in your report with the specific spec names
+that moved together.
+
 ---
 
 ## Step 6: Commit the solution
@@ -183,6 +190,15 @@ Rating: Helpful | Adequate | Confusing
 [When a spec fails, does the error message tell the student what to do? For any
 confusing failure, quote the message and explain what's missing. Good messages
 point toward the solution; bad ones leave the student staring at a stack trace.]
+
+### Spec granularity
+Rating: Good | Has paired specs
+
+[Does each atomic unit of work (one validation, one method, one scope) make exactly
+one spec go green? List any step where more than one spec passed simultaneously,
+naming the specs that moved together and the single line of code that caused it.
+Paired specs are a TDD experience problem — a student working one step at a time
+will see the count jump unexpectedly and may not understand why.]
 
 ### Difficulty calibration
 Rating: Too easy | About right | Too hard — for Phase [N]

@@ -7,7 +7,7 @@ bundle install
 bundle exec rspec
 ```
 
-You should see **10 failures**. Your job is to add validations to the `Product` and
+You should see **6 failures**. Your job is to add validations to the `Product` and
 `Category` models that make them all pass.
 
 The database tables are already created — you don't need to write any migrations.
@@ -32,7 +32,11 @@ anything they can't cover.
 Rejects blank values (nil, empty string, whitespace-only).
 
 ```ruby
+# Uses the default error message: "can't be blank"
 validates :name, presence: true
+
+# Override the message for a better user-facing experience
+validates :name, presence: { message: "is required" }
 ```
 
 ### Uniqueness
@@ -136,4 +140,4 @@ bundle exec rspec
 bundle exec rspec
 ```
 
-**You're done when:** `bundle exec rspec` reports 10 examples, 0 failures.
+**You're done when:** `bundle exec rspec` reports 6 examples, 0 failures.
