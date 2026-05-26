@@ -108,28 +108,32 @@ users, reviews).
      makes both pass at once, which confuses students doing TDD step by step. The rule
      is: one atomic unit of work (one validation, one method) must make exactly one
      spec go green. To follow this rule:
-     - **Prefer the `valid?` + errors-only pattern** for specs that check both
-       validity and an error message. Call `model.valid?` explicitly, then assert
-       only on `model.errors[:field]`. This produces a single, always-diagnostic
-       assertion — the failure message names the field and the missing string
-       directly, with no noise about the object's validity state.
+     - Two patterns cover all validation specs. Choose based on whether the error
+       message content is part of what the student must produce:
+
+       **When the message IS the contract** (custom messages, custom validators):
+       call `model.valid?` then assert on `model.errors[:field]`. Single assertion,
+       always diagnostic — the failure output names the field and the missing string.
        ```ruby
-       # preferred
        product.valid?
        expect(product.errors[:name]).to include("is required")
        ```
-     - When the goal is to verify a validation fires on a specific field but the
-       message is not part of the contract, use `valid?` + `errors[:field].not_to
-       be_empty`. This gives a clear failure message (`expected [] not to be empty`)
-       that points directly at the field without pinning Rails' default wording.
-       Avoid bare `not_to be_valid` — its failure message shows object state and
-       gives the student no indication of which field or validator is missing.
+
+       **When only validity matters** (standard validators, default messages):
+       use `not_to be_valid` with a custom failure message string. One line,
+       idiomatic RSpec, and the failure output tells the student exactly what
+       validation is missing.
+       ```ruby
+       expect(category).not_to be_valid, "Expected :name to be invalid when blank"
+       expect(order).not_to be_valid, "Expected :status to be invalid when not unique"
+       ```
+       Prefer the phrasing `"Expected :<field> to be invalid when <condition>"`.
+       Never use bare `not_to be_valid` without a custom message — the default
+       failure output is an object dump that gives the student nothing to act on.
+
      - Use `aggregate_failures` only when two genuinely independent assertions are
        both needed and neither can stand alone. Do not use it merely to work around
        a combined test that could be simplified to a single assertion.
-     - For custom validators (`validate :method_name`), use the `valid?` + errors
-       pattern — it pins both the field and the exact `errors.add` message the
-       learner must produce without requiring a second assertion.
      - Shoulda-matchers one-liners are appropriate when there is no paired errors
        spec and the matcher fully captures what needs to be tested (e.g. numericality
        chains).
