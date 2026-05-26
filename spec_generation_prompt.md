@@ -115,6 +115,9 @@ users, reviews).
        exact string the learner must produce.
      - For custom validators (`validate :method_name`), always write one combined spec
        that checks both validity and the specific `errors.add` message together.
+     - Wrap combined `not_to be_valid` + `errors` assertions in `aggregate_failures`.
+       Without it, a failing validity check stops execution and the more diagnostic
+       errors message is never shown. With it, both messages appear on every failure.
      - Shoulda-matchers one-liners are appropriate when there is no paired errors spec
        and the matcher fully captures what needs to be tested (e.g. numericality chains).
 

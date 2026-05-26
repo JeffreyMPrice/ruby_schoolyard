@@ -109,7 +109,12 @@ Read in order:
 
 While reading, note:
 - Any instruction in the README that is vague or incomplete
-- Any spec whose initial failure message is cryptic or doesn't point toward a fix
+- Any spec whose initial failure message is cryptic or doesn't point toward a fix.
+  Pay special attention to specs with multiple assertions: if the first assertion is
+  `expect(x).not_to be_valid`, that message alone ("expected X to not be valid") tells
+  the student nothing about *what* to add. The diagnostic message is usually in the
+  second assertion — check whether it is reachable. If execution stops at the first
+  assertion, the helpful message is silently swallowed.
 - Any spec that seems to require knowledge outside this assignment's stated concepts
 
 ---
@@ -189,7 +194,12 @@ Rating: Helpful | Adequate | Confusing
 
 [When a spec fails, does the error message tell the student what to do? For any
 confusing failure, quote the message and explain what's missing. Good messages
-point toward the solution; bad ones leave the student staring at a stack trace.]
+point toward the solution; bad ones leave the student staring at a stack trace.
+
+For specs with multiple assertions: quote what the student actually sees on first
+run. If the spec uses sequential assertions without `aggregate_failures`, only the
+first failure is shown — check whether that first message alone is diagnostic. If
+the more informative message is buried in a later assertion that never runs, flag it.]
 
 ### Spec granularity
 Rating: Good | Has paired specs
