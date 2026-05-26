@@ -33,6 +33,24 @@ problem, write specs that expose it, then fix it.
 
 ---
 
+## Before you start: create a student branch
+
+Always branch off `main` before writing any code. This keeps your solutions separate
+from the curriculum skeleton and lets you compare your work against the reference solution.
+
+```bash
+git checkout -b student/01-building-the-schema
+```
+
+When you finish an assignment, come back to `main` and branch again for the next one:
+
+```bash
+git checkout main
+git checkout -b student/02-keeping-data-clean
+```
+
+---
+
 ## Working through an assignment
 
 Every assignment follows the same loop:
