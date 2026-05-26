@@ -4,13 +4,15 @@ RSpec.describe Category, type: :model do
   describe "validations" do
     it "is invalid without a name" do
       category = build(:category, name: "")
-      expect(category).not_to be_valid
+      category.valid?
+      expect(category.errors[:name]).not_to be_empty
     end
 
     it "is invalid with a duplicate name" do
       create(:category, name: "Electronics")
       duplicate = build(:category, name: "Electronics")
-      expect(duplicate).not_to be_valid
+      duplicate.valid?
+      expect(duplicate.errors[:name]).not_to be_empty
     end
   end
 end

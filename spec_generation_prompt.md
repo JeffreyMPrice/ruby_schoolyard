@@ -118,10 +118,12 @@ users, reviews).
        product.valid?
        expect(product.errors[:name]).to include("is required")
        ```
-     - Only assert `not_to be_valid` (without an errors check) when the goal is
-       solely to verify that a validation fires and the message itself is not part
-       of the contract — e.g. standard validators whose default messages are well
-       known (`presence`, `uniqueness`).
+     - When the goal is to verify a validation fires on a specific field but the
+       message is not part of the contract, use `valid?` + `errors[:field].not_to
+       be_empty`. This gives a clear failure message (`expected [] not to be empty`)
+       that points directly at the field without pinning Rails' default wording.
+       Avoid bare `not_to be_valid` — its failure message shows object state and
+       gives the student no indication of which field or validator is missing.
      - Use `aggregate_failures` only when two genuinely independent assertions are
        both needed and neither can stand alone. Do not use it merely to work around
        a combined test that could be simplified to a single assertion.
