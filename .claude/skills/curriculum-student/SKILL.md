@@ -66,19 +66,27 @@ check at the end. The rule is: a spec may rely on concepts from earlier phases
 
 ## Step 2: Create a test branch
 
+Set REPO and ASSIGNMENT as shell variables first — every subsequent git and rails
+command must use these explicitly to avoid CWD drift between tool calls:
+
 ```bash
-git -C /Users/jeffprice/git/ruby_schoolyard checkout -b student/test-<slug>
+REPO="/Users/jeffprice/git/ruby_schoolyard"
+ASSIGNMENT="$REPO/assignments/<slug>"
+
+git -C "$REPO" checkout -b student/test-<slug>
 ```
+
+Keep `$REPO` and `$ASSIGNMENT` in scope for all later steps.
 
 ---
 
 ## Step 3: Verify the starting state
 
-From inside the assignment directory:
+Run all commands with explicit paths — never rely on the current working directory:
 
 ```bash
-bundle install
-bundle exec rspec
+cd "$ASSIGNMENT" && bundle install
+cd "$ASSIGNMENT" && bundle exec rspec
 ```
 
 **If `bundle install` fails:** stop immediately and report — this is a
@@ -111,11 +119,11 @@ While reading, note:
 Write only what the specs require — migrations, model methods, scopes, callbacks,
 etc. Don't implement concepts beyond what's needed to make the specs pass.
 
-After each attempt, run:
+After each attempt, run using explicit paths:
 
 ```bash
-rails db:migrate 2>&1
-bundle exec rspec 2>&1
+cd "$ASSIGNMENT" && rails db:migrate 2>&1
+cd "$ASSIGNMENT" && bundle exec rspec 2>&1
 ```
 
 Each write → migrate → test cycle counts as one attempt. On failure, read the
@@ -128,11 +136,12 @@ Stop after 3 attempts regardless of outcome.
 
 ## Step 6: Commit the solution
 
-Whether passing or not, commit what you have:
+Use the explicit `$REPO` variable throughout — never a bare `git` command, which
+risks committing to whatever branch the CWD shell happens to be on:
 
 ```bash
-git -C /Users/jeffprice/git/ruby_schoolyard add assignments/<slug>/
-git -C /Users/jeffprice/git/ruby_schoolyard commit -m "student attempt: <slug>"
+git -C "$REPO" add assignments/<slug>/
+git -C "$REPO" commit -m "student attempt: <slug>"
 ```
 
 ---
