@@ -56,6 +56,14 @@ validates :price, numericality: { greater_than: 0 }
 validates :stock_count, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 ```
 
+> **Heads up:** before you add your numericality validations, the specs for
+> `:price` and `:stock_count` may show a warning about "changing certain values"
+> or "writer methods". This is a known ActiveRecord type-casting behaviour — the
+> test framework probes the attribute with a non-numeric string, and ActiveRecord
+> silently coerces it to `0`. The warning is harmless. Once your validation is in
+> place the spec will go green and the warning will disappear. Don't let it send
+> you down a rabbit hole.
+
 ### Custom validators
 
 When built-in validators aren't enough, write a method and declare it with `validate`.
