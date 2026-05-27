@@ -8,7 +8,7 @@ bundle exec rspec
 ```
 
 You should see **5 failures**. Your job is to add association declarations to
-`Category` and `Product` that make them all pass.
+`Category`, `Product`, and `Review` that make them all pass.
 
 ---
 
@@ -18,8 +18,9 @@ Rails associations let two models talk to each other through a foreign key in th
 database. Once you declare an association in the model file, Rails generates
 helper methods automatically — no SQL required.
 
-In this assignment you'll wire up a **one-to-many** relationship: one category
-has many products, each product belongs to one category.
+In this assignment you'll wire up two **one-to-many** relationships: one category
+has many products (each product belongs to one category), and one product has
+many reviews (each review optionally belongs to one product).
 
 ---
 
@@ -44,9 +45,8 @@ product.category        # => #<Category id: 3, name: "Electronics">
 product.category_id     # => 3
 ```
 
-`belongs_to` also makes `Product.where.associated(:category)` and
-`Product.where.missing(:category)` available for querying by association presence
-(see below).
+Any `belongs_to` declaration also makes `where.associated` and `where.missing`
+available for querying by association presence (see below).
 
 ### `has_many` — the model on the one side
 
@@ -79,21 +79,37 @@ end
 
 Use this when the child records (products) have no meaning without the parent.
 
-### `where.associated` and `where.missing`
+### `optional: true`
 
-Once `belongs_to :category` is declared on Product, ActiveRecord can filter
-products by whether they have a category assigned:
+Rails 5+ requires `belongs_to` associations by default — if you try to save a
+record with a nil foreign key, Rails will raise a validation error. When the
+foreign key is intentionally nullable (as with `reviews.product_id`), you need
+to opt out:
 
 ```ruby
-# Only products that have a category
-Product.where.associated(:category)
+class Review < ApplicationRecord
+  belongs_to :product, optional: true
+end
+```
 
-# Only products that have no category (category_id is NULL)
-Product.where.missing(:category)
+Without `optional: true`, creating a review without a product would fail
+validation even though the database allows it.
+
+### `where.associated` and `where.missing`
+
+Once `belongs_to :product, optional: true` is declared on Review, ActiveRecord
+can filter reviews by whether they have a product assigned:
+
+```ruby
+# Only reviews that have a product
+Review.where.associated(:product)
+
+# Only reviews that have no product (product_id is NULL)
+Review.where.missing(:product)
 ```
 
 These methods join against the association and produce clean SQL — no manual
-`WHERE category_id IS NULL` needed.
+`WHERE product_id IS NULL` needed.
 
 ---
 
@@ -124,7 +140,7 @@ end
 
 # app/models/book.rb
 class Book < ApplicationRecord
-  belongs_to :author
+  belongs_to :author, optional: true  # author_id is nullable
 end
 ```
 
@@ -161,13 +177,16 @@ author.destroy
 
 ## Your task
 
-You need to add association declarations to two model files:
+You need to add association declarations to three model files:
 
 **`app/models/product.rb`** — add one line:
 - `belongs_to :category`
 
 **`app/models/category.rb`** — add one line with an option:
 - `has_many :products, dependent: :destroy`
+
+**`app/models/review.rb`** — add one line:
+- `belongs_to :product, optional: true`
 
 That's it. No new methods, no migrations, no SQL.
 
@@ -180,6 +199,7 @@ bundle exec rspec
 # Edit the models
 # app/models/product.rb
 # app/models/category.rb
+# app/models/review.rb
 
 # Run again after each change — watch specs go green one group at a time
 bundle exec rspec
