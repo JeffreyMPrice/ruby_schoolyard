@@ -141,8 +141,13 @@ Stop after 3 attempts regardless of outcome.
 green, go back and implement the solution one atomic unit at a time — one
 validation, one method, one scope — running the specs after each. Record how many
 specs go green per step. If any single unit of work makes more than one spec pass,
-that is a paired-spec problem: flag it in your report with the specific spec names
-that moved together.
+flag it in your report with the specific spec names that moved together.
+
+**Always flag, never dismiss.** Even if the paired specs are in the same
+`describe` block and seem to document complementary behaviours of the same
+method, still report them. The author decides whether the pairing is intentional
+and acceptable — that is not your call to make. Your job is to surface it
+clearly so the author can choose.
 
 ---
 
@@ -205,10 +210,12 @@ the more informative message is buried in a later assertion that never runs, fla
 Rating: Good | Has paired specs
 
 [Does each atomic unit of work (one validation, one method, one scope) make exactly
-one spec go green? List any step where more than one spec passed simultaneously,
+one spec go green? List every step where more than one spec passed simultaneously,
 naming the specs that moved together and the single line of code that caused it.
-Paired specs are a TDD experience problem — a student working one step at a time
-will see the count jump unexpectedly and may not understand why.]
+Flag this even when the specs are in the same `describe` block or appear to
+document complementary behaviours — the author decides whether the pairing is
+acceptable, not you. Paired specs are a TDD experience issue: a student working
+one step at a time will see the count jump unexpectedly.]
 
 ### Difficulty calibration
 Rating: Too easy | About right | Too hard — for Phase [N]

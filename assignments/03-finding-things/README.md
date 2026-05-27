@@ -102,6 +102,11 @@ Product.order(price: :asc).pick(:price)   # => 9.99  (a decimal, not an array)
 Product.pluck(:price).first               # same result, but loads all prices first
 ```
 
+**Prefer `pick` whenever you need a single value.** `pick` issues a `LIMIT 1`
+query and returns immediately — the database does the work. `pluck(:price).first`
+fetches every price in the table into a Ruby array and then discards all but the
+first. On a table with thousands of rows the difference is significant.
+
 ### `ids` — shorthand for all primary keys
 
 `ids` is a shortcut for `pluck(:id)`. Returns an array of integer ids.
