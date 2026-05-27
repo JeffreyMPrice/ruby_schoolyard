@@ -7,7 +7,7 @@ bundle install
 bundle exec rspec
 ```
 
-You should see **9 failures**. Your job is to implement class methods on `Product`
+You should see **10 failures**. Your job is to implement class methods on `Product`
 that make them all pass.
 
 The database table is already created — you don't need to write any migrations.
@@ -91,6 +91,17 @@ Product.pluck(:name)            # => ["Widget", "Gadget", ...]
 Product.pluck(:id, :name)       # => [[1, "Widget"], [2, "Gadget"], ...]
 ```
 
+### `pick` — a single value from a single row
+
+`pick` is the scalar version of `pluck`. Where `pluck` returns an array of
+values, `pick` returns just the first one — without instantiating any model
+objects. Useful when you need exactly one value and don't want an array wrapper.
+
+```ruby
+Product.order(price: :asc).pick(:price)   # => 9.99  (a decimal, not an array)
+Product.pluck(:price).first               # same result, but loads all prices first
+```
+
 ### `ids` — shorthand for all primary keys
 
 `ids` is a shortcut for `pluck(:id)`. Returns an array of integer ids.
@@ -150,7 +161,7 @@ end
 
 ## Your task
 
-Implement seven class methods on `app/models/product.rb`. The spec file tells
+Implement eight class methods on `app/models/product.rb`. The spec file tells
 you exactly what each method must be named and what it must return. Use one
 ActiveRecord query method per implementation — no manual loops over arrays.
 
@@ -167,4 +178,4 @@ bundle exec rspec
 bundle exec rspec
 ```
 
-**You're done when:** `bundle exec rspec` reports 9 examples, 0 failures.
+**You're done when:** `bundle exec rspec` reports 10 examples, 0 failures.

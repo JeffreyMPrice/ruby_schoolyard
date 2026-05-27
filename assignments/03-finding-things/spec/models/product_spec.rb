@@ -63,4 +63,12 @@ RSpec.describe Product, type: :model do
       expect(Product.all_ids).to match_array(products.map(&:id))
     end
   end
+
+  describe ".cheapest_price" do
+    it "returns the price of the least expensive product as a single value, not an array" do
+      create(:product, price: 9.99)
+      create(:product, price: 49.99)
+      expect(Product.cheapest_price).to eq(9.99)
+    end
+  end
 end
