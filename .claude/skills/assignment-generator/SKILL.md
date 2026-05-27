@@ -116,6 +116,14 @@ Skeleton only: class definition, given associations/validations, NO implementati
 of the concept under test. For anti-pattern assignments, pre-write the broken
 code as specified in `spec_generation_prompt.md`.
 
+**`optional: true` rule:** If a foreign key column is nullable in the migration,
+the corresponding `belongs_to` declaration in the model AND every code example
+in the README must use `optional: true`. Rails 5+ requires associations by
+default — omitting `optional: true` on a nullable foreign key causes
+`ActiveRecord::RecordInvalid` errors whenever a record is created without that
+association, including in factory-created control records in unrelated specs.
+This produces deeply confusing failures that point nowhere near the real fix.
+
 ### `spec/factories/<name>.rb` — one per model
 FactoryBot with Faker. Minimal — only attributes the specs need.
 
