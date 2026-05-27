@@ -33,7 +33,7 @@ the relationship (Product) declares `belongs_to`:
 
 ```ruby
 class Product < ApplicationRecord
-  belongs_to :category
+  belongs_to :category, optional: true
 end
 ```
 
@@ -44,6 +44,10 @@ fetches the associated Category record.
 product.category        # => #<Category id: 3, name: "Electronics">
 product.category_id     # => 3
 ```
+
+The `optional: true` is needed here because `category_id` is nullable — some
+products in the database have no category assigned. Without it, Rails would raise
+a validation error whenever you try to save a product without a category.
 
 Any `belongs_to` declaration also makes `where.associated` and `where.missing`
 available for querying by association presence (see below).
@@ -180,7 +184,7 @@ author.destroy
 You need to add association declarations to three model files:
 
 **`app/models/product.rb`** — add one line:
-- `belongs_to :category`
+- `belongs_to :category, optional: true`
 
 **`app/models/category.rb`** — add one line with an option:
 - `has_many :products, dependent: :destroy`
