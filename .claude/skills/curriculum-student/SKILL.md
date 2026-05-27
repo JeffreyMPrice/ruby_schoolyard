@@ -2,7 +2,7 @@
 name: curriculum-student
 description: >
   Simulate a student working through a Ruby Schoolyard assignment to validate it
-  before publishing. Use whenever Jeff says "test assignment X", "validate this
+  before publishing. Use whenever the user says "test assignment X", "validate this
   assignment", "run the student agent on X", "check if assignment 01 works",
   "does this assignment work", "simulate a student", or any variant of wanting
   to verify a curriculum assignment is correct and well-formed. Works on exactly
