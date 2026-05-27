@@ -147,6 +147,59 @@ users, reviews).
    - The learner should be able to make all specs pass in [10–20 / 15–25 / 20–30] minutes
    - Do not add extra concepts beyond what is listed in "Core concept" above
 
+6. RSpec conventions — apply these style rules to every spec file:
+
+   **`describe` vs `context`**
+   - `describe` groups related examples by category: a method name, a type of validation,
+     a schema property. Example: `describe "numericality"`, `describe "#products"`.
+   - `context` describes a condition — a state of the system that changes the outcome.
+     Context strings must start with "when", "with", or "without".
+     Example: `context "when name is nil"`, `context "with a duplicate email"`.
+   - Never use `context` as a label for a category. "column types", "associations",
+     "validations" describe categories — those belong under `describe`, not `context`.
+
+   **Nesting depth**
+   Method describes sit directly under `RSpec.describe ModelName`. Do not add an extra
+   outer wrapper (`describe "associations"`, `describe "validations"`) unless that outer
+   layer would serve a genuine `context` purpose. The grouping name is redundant when the
+   method describes already make the category obvious.
+
+   **`subject` scope**
+   Declare `subject` inside the `describe` or `context` block where it is actually used.
+   A top-level `subject` that only feeds one nested context misleads readers into checking
+   whether other specs use it — they don't.
+
+   **`let` and inline setup**
+   Use inline local variables inside `it` blocks for single-example setup. `let` is reserved
+   for setup genuinely shared across two or more examples in the same context. Do not use
+   `let` in Phase 1–4 specs — the indirection is not worth it for the small, focused setups
+   those specs require.
+
+   **Control records**
+   Assign discarded control records to a `_`-prefixed variable. This is idiomatic Ruby for
+   intentional discard and is self-documenting. Do not leave them unassigned with a comment.
+   ```ruby
+   _unowned = create(:product)   # right — intent is clear
+   create(:product)              # avoid — reader wonders if the omission was a mistake
+   ```
+
+   **Dependent assertions**
+   Do not chain assertions where later ones depend on side effects of earlier ones. A
+   `change { }` assertion followed by `exists?` checks on the same records is a common
+   example: if the `change` assertion passes, the `exists?` checks are redundant; if it
+   fails, they are unreachable. One well-chosen assertion per behaviour is the goal.
+
+   **Matcher consistency**
+   Use `contain_exactly` for unordered collection assertions. Use `eq` only when order
+   matters. Do not use `match_array` — it is an alias for `contain_exactly` and the two
+   should not appear in the same suite.
+
+   **Failure message completeness**
+   When a custom failure message hints at the fix, include the complete declaration the
+   learner must write. If the fix requires `belongs_to :category, optional: true`, the
+   message must say so — omitting `optional: true` leads the student to a partial fix
+   that will break other specs.
+
 ## Output Format
 
 Produce each file as a clearly labelled code block with its path as the heading.

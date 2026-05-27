@@ -60,7 +60,7 @@ RSpec.describe Product, type: :model do
   describe ".all_ids" do
     it "returns an array of all product ids" do
       products = create_list(:product, 3)
-      expect(Product.all_ids).to match_array(products.map(&:id))
+      expect(Product.all_ids).to contain_exactly(*products.map(&:id))
     end
   end
 
